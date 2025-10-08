@@ -7,6 +7,16 @@ import os
 from datetime import datetime
 import threading
 
+# Устанавливаем UTF-8 кодировку для вывода
+if sys.stdout.encoding != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except AttributeError:
+        # Для старых версий Python
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
 # Конфигурация
 KEY = 0x20  # Space (0x20)
 MIN_PRESS_DUR = 0.04               # Минимальное время нажатия (сек)
@@ -15,8 +25,8 @@ MIN_DELAY = 0.01  # Минимальная пауза между кликами
 MAX_DELAY = 0.04  # Максимальная пауза
 TOGGLE_HOTKEY = 0x09 # Клавиша TAB
 EXIT_HOTKEY = 0x10  # Клавиша SHIFT
-IMAGEM_BAU = r"D:\1.png"  # Путь к первому изображению
-IMAGEM_BAU1 = r"D:\2.png"  # Путь ко второму изображению
+IMAGEM_BAU = r"Q:\1.png"  # Путь к первому изображению
+IMAGEM_BAU1 = r"Q:\2.png"  # Путь ко второму изображению
 
 # Глобальные переменные
 user32 = ctypes.windll.user32
@@ -90,7 +100,7 @@ def clicar_no_bau():
             pyautogui.click(centro_bau.x, centro_bau.y)
             
             contador += 1
-            texto = f"сундучок подобран! /ᐠ. .ᐟ\\ Ⳋ ({contador}) - {os.path.basename(image_found)}"
+            texto = f"Сундучок подобран! /ᐠ. .ᐟ\\ Ⳋ ({contador}) - {os.path.basename(image_found)}"
             print(mensagem_colorida(texto, cor=True))
 
             return True
@@ -121,8 +131,8 @@ def show_stats():
     segundos = int(tempo_total % 60)
 
     print("\n\n\033[1;36m[ СТАТИСТИКА ]\033[0m")
-    print(f"время выполнения: {horas}h {minutos}m {segundos}s")
-    print(f"общее количество нажатых сундуков: {contador}")
+    print(f"Время выполнения: {horas}ч {minutos}м {segundos}с")
+    print(f"Общее количество нажатых сундуков: {contador}")
 
 def test_images():
     """Функция для тестирования распознавания изображений"""
@@ -141,11 +151,11 @@ def test_images():
             print(f"⚠️ Файл изображения {i} не существует: {img_path}")
 
 def main():
-    print(f"""Автокликер запущен. Управление:
+    print("""Автокликер запущен. Управление:
     Клавиша TAB - Вкл/Выкл
     Клавиша SHIFT - Выход
     """)
-    print("ᨐ ฅ добро пожаловать в bongo cat script!\n")
+    print("Добро пожаловать в bongo cat script!\n")
 
     # Тестируем распознавание изображений при запуске
     test_images()
@@ -169,8 +179,7 @@ def main():
                 time.sleep(0.1)
     except KeyboardInterrupt:
         show_stats()
-        input("нажмите Enter, чтобы закрыть программу...")
+        input("Нажмите Enter, чтобы закрыть программу...")
 
 if __name__ == "__main__":
-
     main()
