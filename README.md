@@ -4,7 +4,7 @@
 
 ## 📥 Скачать Zip архив
 
-[![Скачать Zip](https://img.shields.io/badge/Download-Windows-blue?style=for-the-badge&logo=windows)](https://github.com/RoninOnis/BongoCat-auto/releases/tag/BongoCat_auto_v1.0)
+[![Скачать Zip](https://img.shields.io/badge/Download-Windows-blue?style=for-the-badge&logo=windows)](https://github.com/RoninOnis/BongoCat-auto/releases/tag/BongoCat_auto_v1.1)
 
 ## 🚨 Важное ограничение
 
