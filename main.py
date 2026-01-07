@@ -19,8 +19,17 @@ if sys.stdout.encoding != 'utf-8':
 
 # Конфигурация
 KEY = 0x20  # Space (0x20)
-MIN_PRESS_DUR = 0.04               # Минимальное время нажатия (сек)
-MAX_PRESS_DUR = 0.07  # Максимальное время нажатия
+KEY1 = 0x31  # цифра 1
+KEY2 = 0x32  # цифра 2
+KEY3 = 0x33  # цифра 3
+KEY4 = 0x34  # цифра 4
+KEY5 = 0x35  # цифра 5
+KEY6 = 0x36  # цифра 6
+KEY7 = 0x37  # цифра 7
+KEY8 = 0x38  # цифра 8
+KEY9 = 0x39  # цифра 9
+MIN_PRESS_DUR = 0.02  # Минимальное время нажатия (сек)
+MAX_PRESS_DUR = 0.04  # Максимальное время нажатия
 MIN_DELAY = 0.01  # Минимальная пауза между кликами
 MAX_DELAY = 0.04  # Максимальная пауза
 TOGGLE_HOTKEY = 0x09 # Клавиша TAB
@@ -38,8 +47,26 @@ use_confidence = True  # Флаг для использования confidence
 
 def press_key():
     user32.keybd_event(KEY, 0, 0x0001, 0)  # KEY_DOWN
+    user32.keybd_event(KEY1, 0, 0x0001, 0)  # KEY_DOWN
+    user32.keybd_event(KEY2, 0, 0x0001, 0)  # KEY_DOWN
+    user32.keybd_event(KEY3, 0, 0x0001, 0)  # KEY_DOWN
+    user32.keybd_event(KEY4, 0, 0x0001, 0)  # KEY_DOWN
+    user32.keybd_event(KEY5, 0, 0x0001, 0)  # KEY_DOWN
+    user32.keybd_event(KEY6, 0, 0x0001, 0)  # KEY_DOWN
+    user32.keybd_event(KEY7, 0, 0x0001, 0)  # KEY_DOWN
+    user32.keybd_event(KEY8, 0, 0x0001, 0)  # KEY_DOWN
+    user32.keybd_event(KEY9, 0, 0x0001, 0)  # KEY_DOWN
     time.sleep(random.uniform(MIN_PRESS_DUR, MAX_PRESS_DUR))
     user32.keybd_event(KEY, 0, 0x0002, 0)  # KEY_UP
+    user32.keybd_event(KEY1, 0, 0x0002, 0)  # KEY_UP
+    user32.keybd_event(KEY2, 0, 0x0002, 0)  # KEY_UP
+    user32.keybd_event(KEY3, 0, 0x0002, 0)  # KEY_UP
+    user32.keybd_event(KEY4, 0, 0x0002, 0)  # KEY_UP
+    user32.keybd_event(KEY5, 0, 0x0002, 0)  # KEY_UP
+    user32.keybd_event(KEY6, 0, 0x0002, 0)  # KEY_UP
+    user32.keybd_event(KEY7, 0, 0x0002, 0)  # KEY_UP
+    user32.keybd_event(KEY8, 0, 0x0002, 0)  # KEY_UP
+    user32.keybd_event(KEY9, 0, 0x0002, 0)  # KEY_UP
 
 def locate_image(image_path):
     """Функция для поиска изображения с обработкой ошибки confidence"""
@@ -73,7 +100,7 @@ def clicar_no_bau():
             image_found = IMAGEM_BAU
     except Exception as e:
         print(f"Ошибка при поиске первого изображения: {e}")
-    
+
     # Если первое не найдено, пробуем второе
     if not local:
         try:
@@ -173,4 +200,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
