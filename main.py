@@ -2,7 +2,6 @@ import ctypes
 import time
 import random
 import sys
-import pyautogui
 import os
 from datetime import datetime
 import threading
@@ -17,25 +16,81 @@ if sys.stdout.encoding != 'utf-8':
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
         sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-# Конфигурация
-KEY = 0x20  # Space (0x20)
-KEY1 = 0x31  # цифра 1
-KEY2 = 0x32  # цифра 2
-KEY3 = 0x33  # цифра 3
-KEY4 = 0x34  # цифра 4
-KEY5 = 0x35  # цифра 5
-KEY6 = 0x36  # цифра 6
-KEY7 = 0x37  # цифра 7
-KEY8 = 0x38  # цифра 8
-KEY9 = 0x39  # цифра 9
+# Конфигурация - Virtual-Key Codes
+# Буквы A-Z (0x41-0x5A)
+KEY_A = 0x41  # A
+KEY_B = 0x42  # B
+KEY_C = 0x43  # C
+KEY_D = 0x44  # D
+KEY_E = 0x45  # E
+KEY_F = 0x46  # F
+KEY_G = 0x47  # G
+KEY_H = 0x48  # H
+KEY_I = 0x49  # I
+KEY_J = 0x4A  # J
+KEY_K = 0x4B  # K
+KEY_L = 0x4C  # L
+KEY_M = 0x4D  # M
+KEY_N = 0x4E  # N
+KEY_O = 0x4F  # O
+KEY_P = 0x50  # P
+KEY_Q = 0x51  # Q
+KEY_R = 0x52  # R
+KEY_S = 0x53  # S
+KEY_T = 0x54  # T
+KEY_U = 0x55  # U
+KEY_V = 0x56  # V
+KEY_W = 0x57  # W
+KEY_X = 0x58  # X
+KEY_Y = 0x59  # Y
+KEY_Z = 0x5A  # Z
+
+# Цифры 0-9 (0x30-0x39)
+KEY_0 = 0x30  # 0
+KEY_1 = 0x31  # 1
+KEY_2 = 0x32  # 2
+KEY_3 = 0x33  # 3
+KEY_4 = 0x34  # 4
+KEY_5 = 0x35  # 5
+KEY_6 = 0x36  # 6
+KEY_7 = 0x37  # 7
+KEY_8 = 0x38  # 8
+KEY_9 = 0x39  # 9
+
+# Функциональные клавиши
+KEY_SPACE = 0x20  # Space
+KEY_TAB = 0x09    # TAB
+KEY_SHIFT = 0x10  # SHIFT
+KEY_ENTER = 0x0D  # ENTER
+KEY_ESC = 0x1B    # ESCAPE
+KEY_BACKSPACE = 0x08  # BACKSPACE
+KEY_DELETE = 0x2E  # DELETE
+KEY_INSERT = 0x2D  # INSERT
+KEY_HOME = 0x24    # HOME
+KEY_END = 0x23     # END
+KEY_PGUP = 0x21    # PAGE UP
+KEY_PGDN = 0x22    # PAGE DOWN
+
+# Клавиши со специальными символами
+KEY_MINUS = 0xBD    # - (минус)
+KEY_EQUAL = 0xBB    # = (равно)
+KEY_LBRACKET = 0xDB # [ (левая скобка)
+KEY_RBRACKET = 0xDD # ] (правая скобка)
+KEY_SEMICOLON = 0xBA # ; (точка с запятой)
+KEY_APOSTROPHE = 0xDE # ' (апостроф)
+KEY_COMMA = 0xBC    # , (запятая)
+KEY_PERIOD = 0xBE   # . (точка)
+KEY_SLASH = 0xBF    # / (слеш)
+KEY_BACKSLASH = 0xDC # \ (обратный слеш)
+KEY_TILDE = 0xC0    # ` (тильда)
+
+# Настройки кликера
 MIN_PRESS_DUR = 0.02  # Минимальное время нажатия (сек)
 MAX_PRESS_DUR = 0.04  # Максимальное время нажатия
-MIN_DELAY = 0.01  # Минимальная пауза между кликами
-MAX_DELAY = 0.04  # Максимальная пауза
-TOGGLE_HOTKEY = 0x09 # Клавиша TAB
-EXIT_HOTKEY = 0x10  # Клавиша SHIFT
-IMAGEM_BAU = r"Q:\1.png"  # Путь к первому изображению
-IMAGEM_BAU1 = r"Q:\2.png"  # Путь ко второму изображению
+MIN_DELAY = 0.01      # Минимальная пауза между кликами
+MAX_DELAY = 0.04      # Максимальная пауза
+TOGGLE_HOTKEY = KEY_TAB  # Клавиша TAB для вкл/выкл
+EXIT_HOTKEY = KEY_SHIFT  # Клавиша SHIFT для выхода
 
 # Глобальные переменные
 user32 = ctypes.windll.user32
@@ -43,88 +98,148 @@ kernel32 = ctypes.windll.kernel32
 running = False
 contador = 0
 inicio = time.time()
-use_confidence = True  # Флаг для использования confidence
 
 def press_key():
-    user32.keybd_event(KEY, 0, 0x0001, 0)  # KEY_DOWN
-    user32.keybd_event(KEY1, 0, 0x0001, 0)  # KEY_DOWN
-    user32.keybd_event(KEY2, 0, 0x0001, 0)  # KEY_DOWN
-    user32.keybd_event(KEY3, 0, 0x0001, 0)  # KEY_DOWN
-    user32.keybd_event(KEY4, 0, 0x0001, 0)  # KEY_DOWN
-    user32.keybd_event(KEY5, 0, 0x0001, 0)  # KEY_DOWN
-    user32.keybd_event(KEY6, 0, 0x0001, 0)  # KEY_DOWN
-    user32.keybd_event(KEY7, 0, 0x0001, 0)  # KEY_DOWN
-    user32.keybd_event(KEY8, 0, 0x0001, 0)  # KEY_DOWN
-    user32.keybd_event(KEY9, 0, 0x0001, 0)  # KEY_DOWN
+    """Функция нажатия всех клавиш одновременно"""
+    # Нажимаем все клавиши
+    user32.keybd_event(KEY_SPACE, 0, 0x0001, 0)
+    
+    # Цифры
+    user32.keybd_event(KEY_0, 0, 0x0001, 0)
+    user32.keybd_event(KEY_1, 0, 0x0001, 0)
+    user32.keybd_event(KEY_2, 0, 0x0001, 0)
+    user32.keybd_event(KEY_3, 0, 0x0001, 0)
+    user32.keybd_event(KEY_4, 0, 0x0001, 0)
+    user32.keybd_event(KEY_5, 0, 0x0001, 0)
+    user32.keybd_event(KEY_6, 0, 0x0001, 0)
+    user32.keybd_event(KEY_7, 0, 0x0001, 0)
+    user32.keybd_event(KEY_8, 0, 0x0001, 0)
+    user32.keybd_event(KEY_9, 0, 0x0001, 0)
+    
+    # Буквы A-Z
+    user32.keybd_event(KEY_A, 0, 0x0001, 0)
+    user32.keybd_event(KEY_B, 0, 0x0001, 0)
+    user32.keybd_event(KEY_C, 0, 0x0001, 0)
+    user32.keybd_event(KEY_D, 0, 0x0001, 0)
+    user32.keybd_event(KEY_E, 0, 0x0001, 0)
+    user32.keybd_event(KEY_F, 0, 0x0001, 0)
+    user32.keybd_event(KEY_G, 0, 0x0001, 0)
+    user32.keybd_event(KEY_H, 0, 0x0001, 0)
+    user32.keybd_event(KEY_I, 0, 0x0001, 0)
+    user32.keybd_event(KEY_J, 0, 0x0001, 0)
+    user32.keybd_event(KEY_K, 0, 0x0001, 0)
+    user32.keybd_event(KEY_L, 0, 0x0001, 0)
+    user32.keybd_event(KEY_M, 0, 0x0001, 0)
+    user32.keybd_event(KEY_N, 0, 0x0001, 0)
+    user32.keybd_event(KEY_O, 0, 0x0001, 0)
+    user32.keybd_event(KEY_P, 0, 0x0001, 0)
+    user32.keybd_event(KEY_Q, 0, 0x0001, 0)
+    user32.keybd_event(KEY_R, 0, 0x0001, 0)
+    user32.keybd_event(KEY_S, 0, 0x0001, 0)
+    user32.keybd_event(KEY_T, 0, 0x0001, 0)
+    user32.keybd_event(KEY_U, 0, 0x0001, 0)
+    user32.keybd_event(KEY_V, 0, 0x0001, 0)
+    user32.keybd_event(KEY_W, 0, 0x0001, 0)
+    user32.keybd_event(KEY_X, 0, 0x0001, 0)
+    user32.keybd_event(KEY_Y, 0, 0x0001, 0)
+    user32.keybd_event(KEY_Z, 0, 0x0001, 0)
+    
+    # Специальные клавиши
+    user32.keybd_event(KEY_ENTER, 0, 0x0001, 0)
+    user32.keybd_event(KEY_ESC, 0, 0x0001, 0)
+    user32.keybd_event(KEY_BACKSPACE, 0, 0x0001, 0)
+    user32.keybd_event(KEY_DELETE, 0, 0x0001, 0)
+    user32.keybd_event(KEY_INSERT, 0, 0x0001, 0)
+    user32.keybd_event(KEY_HOME, 0, 0x0001, 0)
+    user32.keybd_event(KEY_END, 0, 0x0001, 0)
+    user32.keybd_event(KEY_PGUP, 0, 0x0001, 0)
+    user32.keybd_event(KEY_PGDN, 0, 0x0001, 0)
+    
+    # Символы
+    user32.keybd_event(KEY_MINUS, 0, 0x0001, 0)
+    user32.keybd_event(KEY_EQUAL, 0, 0x0001, 0)
+    user32.keybd_event(KEY_LBRACKET, 0, 0x0001, 0)
+    user32.keybd_event(KEY_RBRACKET, 0, 0x0001, 0)
+    user32.keybd_event(KEY_SEMICOLON, 0, 0x0001, 0)
+    user32.keybd_event(KEY_APOSTROPHE, 0, 0x0001, 0)
+    user32.keybd_event(KEY_COMMA, 0, 0x0001, 0)
+    user32.keybd_event(KEY_PERIOD, 0, 0x0001, 0)
+    user32.keybd_event(KEY_SLASH, 0, 0x0001, 0)
+    user32.keybd_event(KEY_BACKSLASH, 0, 0x0001, 0)
+    user32.keybd_event(KEY_TILDE, 0, 0x0001, 0)
+    
+    # Держим нажатыми случайное время
     time.sleep(random.uniform(MIN_PRESS_DUR, MAX_PRESS_DUR))
-    user32.keybd_event(KEY, 0, 0x0002, 0)  # KEY_UP
-    user32.keybd_event(KEY1, 0, 0x0002, 0)  # KEY_UP
-    user32.keybd_event(KEY2, 0, 0x0002, 0)  # KEY_UP
-    user32.keybd_event(KEY3, 0, 0x0002, 0)  # KEY_UP
-    user32.keybd_event(KEY4, 0, 0x0002, 0)  # KEY_UP
-    user32.keybd_event(KEY5, 0, 0x0002, 0)  # KEY_UP
-    user32.keybd_event(KEY6, 0, 0x0002, 0)  # KEY_UP
-    user32.keybd_event(KEY7, 0, 0x0002, 0)  # KEY_UP
-    user32.keybd_event(KEY8, 0, 0x0002, 0)  # KEY_UP
-    user32.keybd_event(KEY9, 0, 0x0002, 0)  # KEY_UP
-
-def locate_image(image_path):
-    """Функция для поиска изображения с обработкой ошибки confidence"""
-    global use_confidence
     
-    if not os.path.exists(image_path):
-        return None
+    # Отпускаем все клавиши
+    user32.keybd_event(KEY_SPACE, 0, 0x0002, 0)
     
-    try:
-        if use_confidence:
-            return pyautogui.locateOnScreen(image_path, confidence=0.7, grayscale=True)
-        else:
-            return pyautogui.locateOnScreen(image_path, grayscale=True)
-    except Exception as e:
-        if "confidence" in str(e):
-            print("OpenCV не установлен, отключаю confidence...")
-            use_confidence = False
-            return pyautogui.locateOnScreen(image_path, grayscale=True)
-        return None
-
-def clicar_no_bau():
+    # Цифры
+    user32.keybd_event(KEY_0, 0, 0x0002, 0)
+    user32.keybd_event(KEY_1, 0, 0x0002, 0)
+    user32.keybd_event(KEY_2, 0, 0x0002, 0)
+    user32.keybd_event(KEY_3, 0, 0x0002, 0)
+    user32.keybd_event(KEY_4, 0, 0x0002, 0)
+    user32.keybd_event(KEY_5, 0, 0x0002, 0)
+    user32.keybd_event(KEY_6, 0, 0x0002, 0)
+    user32.keybd_event(KEY_7, 0, 0x0002, 0)
+    user32.keybd_event(KEY_8, 0, 0x0002, 0)
+    user32.keybd_event(KEY_9, 0, 0x0002, 0)
+    
+    # Буквы A-Z
+    user32.keybd_event(KEY_A, 0, 0x0002, 0)
+    user32.keybd_event(KEY_B, 0, 0x0002, 0)
+    user32.keybd_event(KEY_C, 0, 0x0002, 0)
+    user32.keybd_event(KEY_D, 0, 0x0002, 0)
+    user32.keybd_event(KEY_E, 0, 0x0002, 0)
+    user32.keybd_event(KEY_F, 0, 0x0002, 0)
+    user32.keybd_event(KEY_G, 0, 0x0002, 0)
+    user32.keybd_event(KEY_H, 0, 0x0002, 0)
+    user32.keybd_event(KEY_I, 0, 0x0002, 0)
+    user32.keybd_event(KEY_J, 0, 0x0002, 0)
+    user32.keybd_event(KEY_K, 0, 0x0002, 0)
+    user32.keybd_event(KEY_L, 0, 0x0002, 0)
+    user32.keybd_event(KEY_M, 0, 0x0002, 0)
+    user32.keybd_event(KEY_N, 0, 0x0002, 0)
+    user32.keybd_event(KEY_O, 0, 0x0002, 0)
+    user32.keybd_event(KEY_P, 0, 0x0002, 0)
+    user32.keybd_event(KEY_Q, 0, 0x0002, 0)
+    user32.keybd_event(KEY_R, 0, 0x0002, 0)
+    user32.keybd_event(KEY_S, 0, 0x0002, 0)
+    user32.keybd_event(KEY_T, 0, 0x0002, 0)
+    user32.keybd_event(KEY_U, 0, 0x0002, 0)
+    user32.keybd_event(KEY_V, 0, 0x0002, 0)
+    user32.keybd_event(KEY_W, 0, 0x0002, 0)
+    user32.keybd_event(KEY_X, 0, 0x0002, 0)
+    user32.keybd_event(KEY_Y, 0, 0x0002, 0)
+    user32.keybd_event(KEY_Z, 0, 0x0002, 0)
+    
+    # Специальные клавиши
+    user32.keybd_event(KEY_ENTER, 0, 0x0002, 0)
+    user32.keybd_event(KEY_ESC, 0, 0x0002, 0)
+    user32.keybd_event(KEY_BACKSPACE, 0, 0x0002, 0)
+    user32.keybd_event(KEY_DELETE, 0, 0x0002, 0)
+    user32.keybd_event(KEY_INSERT, 0, 0x0002, 0)
+    user32.keybd_event(KEY_HOME, 0, 0x0002, 0)
+    user32.keybd_event(KEY_END, 0, 0x0002, 0)
+    user32.keybd_event(KEY_PGUP, 0, 0x0002, 0)
+    user32.keybd_event(KEY_PGDN, 0, 0x0002, 0)
+    
+    # Символы
+    user32.keybd_event(KEY_MINUS, 0, 0x0002, 0)
+    user32.keybd_event(KEY_EQUAL, 0, 0x0002, 0)
+    user32.keybd_event(KEY_LBRACKET, 0, 0x0002, 0)
+    user32.keybd_event(KEY_RBRACKET, 0, 0x0002, 0)
+    user32.keybd_event(KEY_SEMICOLON, 0, 0x0002, 0)
+    user32.keybd_event(KEY_APOSTROPHE, 0, 0x0002, 0)
+    user32.keybd_event(KEY_COMMA, 0, 0x0002, 0)
+    user32.keybd_event(KEY_PERIOD, 0, 0x0002, 0)
+    user32.keybd_event(KEY_SLASH, 0, 0x0002, 0)
+    user32.keybd_event(KEY_BACKSLASH, 0, 0x0002, 0)
+    user32.keybd_event(KEY_TILDE, 0, 0x0002, 0)
+    
     global contador
-
-    # Пробуем найти первое изображение
-    local = None
-    image_found = None
-    
-    try:
-        local = locate_image(IMAGEM_BAU)
-        if local:
-            image_found = IMAGEM_BAU
-    except Exception as e:
-        print(f"Ошибка при поиске первого изображения: {e}")
-
-    # Если первое не найдено, пробуем второе
-    if not local:
-        try:
-            local = locate_image(IMAGEM_BAU1)
-            if local:
-                image_found = IMAGEM_BAU1
-        except Exception as e:
-            print(f"Ошибка при поиске второго изображения: {e}")
-
-    if local:
-        try:
-            centro_bau = pyautogui.center(local)
-            # Не перемещаем мышь, сразу кликаем в координаты
-            pyautogui.click(centro_bau.x, centro_bau.y)
-            
-            contador += 1
-            texto = f"Сундучок подобран! /ᐠ. .ᐟ\\ Ⳋ ({contador}) - {os.path.basename(image_found)}"
-            print(texto)
-
-            return True
-        except Exception as e:
-            print(f"Ошибка при клике: {e}")
-            return False
-    return False
+    contador += 1
 
 def listen_hotkeys():
     global running
@@ -133,7 +248,7 @@ def listen_hotkeys():
             running = not running
             status = 'ВКЛ' if running else 'ВЫКЛ'
             print(f"\n{'-'*20} Состояние: {status} {'-'*20}")
-            time.sleep(0.5)
+            time.sleep(0.5)  # Защита от множественных срабатываний
         if user32.GetAsyncKeyState(EXIT_HOTKEY) & 0x8000:
             print("\nВыход...")
             show_stats()
@@ -146,57 +261,47 @@ def show_stats():
     horas = int(tempo_total // 3600)
     minutos = int((tempo_total % 3600) // 60)
     segundos = int(tempo_total % 60)
-
-    print("\n\n\033 СТАТИСТИКА \033")
-    print(f"Время выполнения: {horas}ч {minutos}м {segundos}с")
-    print(f"Общее количество нажатых сундуков: {contador}")
-
-def test_images():
-    """Функция для тестирования распознавания изображений"""
-    print("Тестирование распознавания изображений...")
-    for i, img_path in enumerate([IMAGEM_BAU, IMAGEM_BAU1], 1):
-        if os.path.exists(img_path):
-            try:
-                location = locate_image(img_path)
-                if location:
-                    print(f"✅ Изображение {i} ({os.path.basename(img_path)}) найдено на экране!")
-                else:
-                    print(f"❌ Изображение {i} ({os.path.basename(img_path)}) НЕ найдено на экране.")
-            except Exception as e:
-                print(f"⚠️ Ошибка при поиске изображения {i}: {e}")
-        else:
-            print(f"⚠️ Файл изображения {i} не существует: {img_path}")
+    
+    print("\n" + "="*40)
+    print(" СТАТИСТИКА ".center(40, "="))
+    print("="*40)
+    print(f"Время работы: {horas}ч {minutos}м {segundos}с")
+    print(f"Всего нажатий: {contador}")
+    if tempo_total > 0:
+        print(f"Скорость: {contador / tempo_total:.2f} нажатий/сек")
+    print("="*40)
 
 def main():
-    print("""Автокликер запущен. Управление:
-    Клавиша TAB - Вкл/Выкл
-    Клавиша SHIFT - Выход
-    """)
-    print("Добро пожаловать в bongo cat script!\n")
+    print("="*50)
+    print("КЛАВИАТУРНЫЙ КЛИКЕР".center(50))
+    print("="*50)
+    print("Управление:")
+    print("  TAB   - Вкл/Выкл клики")
+    print("  SHIFT - Выход из программы")
+    print("\nНажимаются все клавиши одновременно:")
+    print("  • Буквы A-Z")
+    print("  • Цифры 0-9")
+    print("  • Специальные клавиши (Enter, Esc, Backspace, Delete, Insert, Home, End, PgUp, PgDn)")
+    print("  • Символы (- = [ ] ; ' , . / \\ `)")
+    print("  • Пробел")
+    print("="*50)
+    print("Добро пожаловать в клавиатурный кликер!\n")
 
-    # Тестируем распознавание изображений при запуске
-    test_images()
-    print("-" * 50)
-
+    # Запускаем поток для отслеживания горячих клавиш
     threading.Thread(target=listen_hotkeys, daemon=True).start()
 
     try:
         while True:
             if running:
-                # Проверяем наличие изображения
-                if clicar_no_bau():
-                    # После клика ждем немного перед возобновлением
-                    time.sleep(0.3)
-                else:
-                    # Если изображения нет, продолжаем спамить пробел
-                    press_key()
-                    time.sleep(random.uniform(MIN_DELAY, MAX_DELAY))
+                press_key()
+                # Случайная пауза между нажатиями
+                time.sleep(random.uniform(MIN_DELAY, MAX_DELAY))
             else:
                 # Небольшая пауза когда скрипт выключен
                 time.sleep(0.1)
     except KeyboardInterrupt:
         show_stats()
-        input("Нажмите Enter, чтобы закрыть программу...")
+        input("\nНажмите Enter, чтобы закрыть программу...")
 
 if __name__ == "__main__":
     main()
