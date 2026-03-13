@@ -4,6 +4,8 @@
 
 [![Скачать Zip](https://img.shields.io/badge/Download-Windows-blue?style=for-the-badge&logo=windows)](https://github.com/RoninOnis/BongoCat-auto/releases/tag/BongoCat_DLL_chest_v1.0)
 
+В архиве находятся 2 версии DLL: Chest только собирает сундуки в автоматическом режиме, Chest+Emote собирает сундуки в автоматическом режиме и воспроизводит выбранные вами эмоции при нажатии на кнопку "Пробел"
+
 Что необходимо сделать:
 1. Закрыть BongoCat
 2. Открыть папку с DLL игры C:\Program Files (x86)\Steam\steamapps\common\BongoCat\BongoCat_Data\Managed
